@@ -18,10 +18,13 @@ public class CompanyController {
     CompanyRepo companyRepo;
     @Autowired
     EmployeeRepo employeeRepo;
+    
+    //gettting list of company
     @GetMapping
     public List<Company> get(){
         return companyRepo.findAll();
     }
+    //add a new company
     @PostMapping
     public Company add(@RequestBody Company company){
     	if(company.getEmployees().isEmpty())
@@ -34,6 +37,7 @@ public class CompanyController {
         return companyRepo.save(company);
     	}
     }
+    //deleting a company
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id) {
     	if(companyRepo.findById(id).isPresent()) {
@@ -44,19 +48,26 @@ public class CompanyController {
 		}
     	
     }
+    //updating a company
     @PutMapping
     public Company update(@RequestBody Company company) {
+    	company.getEmployees().forEach(e->e.setCompany(company));
+    	
+    	
     	return companyRepo.save(company);
     }
+    //getting companies by id
     @GetMapping("/{id}")
     public Company getById(@PathVariable Long id ) {
     	return companyRepo.findById(id).get();
     }
+    //getting list of employee by company id
     @GetMapping("/{id}/employees")
     public List<Employee> getAllEmployee(@PathVariable("id") Long id){
     	return companyRepo.findById(id).get().getEmployees();
     	
     }
+    //adding employees in a company
     @PostMapping("/{id}/employees")
     public Employee addEmployee(@PathVariable("id")Long id,@RequestBody Employee employee) {
     	Company company =companyRepo.findById(id).get();
@@ -66,6 +77,7 @@ public class CompanyController {
     	return employee;
     }
 	
+    //getting employee by id in a company
 	  @GetMapping("/{id}/employees/{eid}") 
 	  public Employee getByid(@PathVariable("id")Long id,@PathVariable("eid")Long eid) {
 		  Optional <Company> com = companyRepo.findById(id);

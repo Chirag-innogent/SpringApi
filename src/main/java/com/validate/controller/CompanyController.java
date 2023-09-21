@@ -75,6 +75,10 @@ public class CompanyController {
 		   employeeRepo.deleteById(eid);
 		   
 	  }
-	  
-    
+	  @PutMapping("/{id}/employees")
+	  public Employee Update(@PathVariable("id")Long id,@RequestBody Employee emp) {
+		  emp.setCompany(companyRepo.findById(id).get());
+		  return employeeRepo.save(emp);
+	  }
+	
 }

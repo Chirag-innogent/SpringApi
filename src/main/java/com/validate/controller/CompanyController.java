@@ -68,7 +68,12 @@ public class CompanyController {
 	
 	  @GetMapping("/{id}/employees/{eid}") 
 	  public Employee getByid(@PathVariable("id")Long id,@PathVariable("eid")Long eid) {
-		  return companyRepo.findById(id).get().getEmployees().stream().filter(e->e.getId()==eid).findAny().get();
+		  Optional <Company> com = companyRepo.findById(id);
+		  Company byId= com.get();
+		  Optional<Employee> emp=byId.getEmployees().stream().filter(e->e.getId().equals(eid)).findAny();
+		  System.out.println(emp.isPresent());
+		  
+		  return emp.get();
 	  }
 	  @DeleteMapping("/{id}/employees/{eid}")
 	  public void deleteByid(@PathVariable("id")Long id,@PathVariable("eid")Long eid) {
